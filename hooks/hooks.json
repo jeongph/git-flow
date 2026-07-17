@@ -1,0 +1,17 @@
+{
+  "description": "Git Flow 위반 차단 — main·develop 직접 커밋, squash 머지, develop발 hotfix 분기, 비-main 릴리스 태그",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/guard.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
