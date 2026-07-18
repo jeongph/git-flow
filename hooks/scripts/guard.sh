@@ -51,7 +51,7 @@ deny() {
 
 # ── 1. main·develop 직접 커밋 ────────────────────────────────
 if [[ "$COMMAND" =~ git[[:space:]]+(commit|cherry-pick|revert)([[:space:]]|$) ]]; then
-  if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ] || [ "$BRANCH" = "develop" ]; then
+  if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "develop" ]; then
     deny "[git-flow] ${BRANCH} 브랜치에 직접 커밋할 수 없다.
 
 Git Flow에서 모든 변경은 feature·release·hotfix 브랜치를 거쳐 PR로 들어온다.
@@ -73,7 +73,7 @@ fi
 # ── 3. develop발 hotfix 분기 ─────────────────────────────────
 if [[ "$COMMAND" =~ git[[:space:]]+(checkout[[:space:]]+-b|switch[[:space:]]+-c)[[:space:]]+hotfix/ ]]; then
   # 분기 대상이 명시되어 있으면(git checkout -b hotfix/x main) 그것을 따르므로 통과
-  if ! [[ "$COMMAND" =~ hotfix/[^[:space:]]+[[:space:]]+(origin/)?(main|master) ]]; then
+  if ! [[ "$COMMAND" =~ hotfix/[^[:space:]]+[[:space:]]+(origin/)?main ]]; then
     if [ "$BRANCH" = "develop" ]; then
       deny "[git-flow] hotfix를 develop에서 분기할 수 없다.
 
@@ -90,7 +90,7 @@ fi
 if [[ "$COMMAND" =~ git[[:space:]]+tag([[:space:]]|$) ]] \
    && [[ "$COMMAND" =~ v?[0-9]+\.[0-9]+ ]] \
    && ! [[ "$COMMAND" =~ [[:space:]]-(d|-delete|l|-list|n[0-9]*)([[:space:]]|$) ]]; then
-  if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "master" ]; then
+  if [ "$BRANCH" != "main" ]; then
     deny "[git-flow] ${BRANCH} 에서 릴리스 태그를 만들 수 없다.
 
 릴리스 태그는 머지된 main 커밋에만 붙는다. main이 '지금 운영에 무엇이 떠 있는가'의

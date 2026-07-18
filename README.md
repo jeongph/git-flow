@@ -10,7 +10,7 @@ Git Flow 브랜치 모델을 Claude Code에서 **PR 기반으로 자동화**하�
 
 **Git Flow**는 Vincent Driessen이 2010년 제안한 브랜치 모델입니다. `main`·`develop`·`feature`·`release`·`hotfix`로 역할을 나눠 정기 릴리스와 긴급 수정의 경로를 분리합니다.
 
-원래의 `git flow` CLI(`nvie/gitflow`·`gitflow-avh`)는 현재 두 구현체 모두 아카이브 상태이며, 로컬 직접 머지(`git checkout master && git merge --no-ff`)를 전제해 PR 리뷰 단계가 없습니다.
+원래의 `git flow` CLI(`nvie/gitflow`·`gitflow-avh`)는 현재 두 구현체 모두 아카이브 상태이며, 로컬 직접 머지(`git merge --no-ff`)를 전제해 PR 리뷰 단계가 없습니다.
 
 이 플러그인은 **브랜치 모델·태그 규칙·back-merge 규칙을 원문 그대로 지키되, 반영 수단을 PR로 구현**합니다.
 

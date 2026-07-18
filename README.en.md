@@ -10,7 +10,7 @@ Once installed — branches start from the correct base, the next version is com
 
 **Git Flow** is the branching model Vincent Driessen proposed in 2010. It separates `main`, `develop`, `feature`, `release`, and `hotfix` so that scheduled releases and emergency fixes travel different paths.
 
-The original `git flow` CLI (`nvie/gitflow`, `gitflow-avh`) is archived in both implementations, and it assumes local direct merges (`git checkout master && git merge --no-ff`) with no pull request review step.
+The original `git flow` CLI (`nvie/gitflow`, `gitflow-avh`) is archived in both implementations, and it assumes local direct merges (`git merge --no-ff`) with no pull request review step.
 
 This plugin **keeps the branching model, tagging rules, and back-merge rules exactly as the original defines them, while implementing the integration path as pull requests**.
 

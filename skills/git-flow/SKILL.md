@@ -50,7 +50,7 @@ git tag -a v1.2.0
 git merge --no-ff release/v1.2.0
 ```
 
-> "First, the release branch is merged into master... **Next**, that commit on master must be tagged for easy future reference to this historical version."
+> 원문 규정: release·hotfix 브랜치를 `main`에 **먼저** 머지하고, **그다음** 그 머지 커밋에 태그를 붙인다.
 > — [A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/)
 
 **머지가 먼저, 태그가 나중이다.** 태그는 머지로 생긴 커밋을 가리킨다. 둘은 별개의 동작이며, 태그가 머지의 부산물로 자동 생성되지 않는다.
@@ -83,7 +83,7 @@ git push origin v1.2.0
 
 ## 5. 머지와 배포는 별개
 
-`git merge`는 배포하지 않는다. 원문의 *"every commit on master is a new production release by definition"* 은 **정의상의 약속**이지 자동 배포 메커니즘이 아니다.
+`git merge`는 배포하지 않는다. 원문이 말하는 *"main의 모든 커밋은 정의상 새로운 운영 릴리스"* 는 **정의상의 약속**이지 자동 배포 메커니즘이 아니다.
 
 실제 배포는 CI/CD가 하며, 트리거는 팀이 정한다.
 
