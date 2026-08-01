@@ -1,5 +1,8 @@
 # git-flow
 
+[![version](https://img.shields.io/github/v/release/jeongph/git-flow?label=version&color=blue)](https://github.com/jeongph/git-flow/releases)
+[![license](https://img.shields.io/github/license/jeongph/git-flow?color=lightgrey)](LICENSE)
+
 Git Flow 브랜치 모델을 Claude Code에서 **PR 기반으로 자동화**하는 플러그인.
 
 설치하면 — 올바른 분기점에서 브랜치를 만들고, 커밋에서 다음 버전을 계산해 제안하며, 릴리스 완료 절차를 단계별로 진행하고, 모델을 깨는 명령을 차단합니다.
