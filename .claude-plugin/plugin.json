@@ -1,6 +1,6 @@
 {
   "name": "git-flow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Git Flow 브랜치 모델을 PR 기반으로 자동화 — feature·release·hotfix 절차 실행, 커밋에서 다음 버전 추론, 모델 위반 차단",
   "author": {
     "name": "JeongUk Park",
