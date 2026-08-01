@@ -66,12 +66,19 @@ git log <마지막태그>..develop --pretty=format:'%s%n%b%n---'
 
 | 감지 | 영향 |
 |---|---|
-| 제목에 `!`(예: `feat(api)!:`) 또는 본문·푸터에 `BREAKING CHANGE:` | MAJOR |
+| 제목에 `!`(예: `feat(api)!:`) 또는 본문·푸터에 `BREAKING CHANGE:` | 현재 major가 0이면 **MINOR**, 1 이상이면 **MAJOR** |
 | `feat` | MINOR |
-| `fix` · `perf` | PATCH |
-| 그 외 (`docs`·`chore`·`refactor`·`style`·`test`·`build`·`ci`) | 없음 |
+| `fix` · `perf` · `refactor` · `revert` · `build` | PATCH |
+| 그 외 (`docs`·`style`·`test`·`ci`·`chore`) | 없음 |
 
-가장 높은 영향 하나가 다음 버전을 결정한다. MAJOR가 하나라도 있으면 MAJOR다.
+가장 높은 영향 하나가 다음 버전을 결정한다. **누적하지 않는다** — `feat`이 10건이어도 MINOR 한 번이다.
+
+두 가지는 표준에서 조정한 것이다.
+
+- **`0.x`의 BREAKING을 MINOR로** — SemVer 4항에 따라 `0.y.z`는 초기 개발 구간이라 호환성을 보장하지 않는다. `0.4.0` → `0.5.0`처럼 올린다.
+- **`refactor`·`revert`·`build`를 PATCH로** — 코드가 실제로 바뀌는 타입을 빼면, 배포 파이프라인이 버전으로 갱신 여부를 판단할 때 그 변경이 사용자에게 도달하지 않는다.
+
+이 표는 [claude-plugins의 `next-version.sh`](https://github.com/jeongph/claude-plugins/blob/main/.github/scripts/next-version.sh)와 같은 규칙이다. 릴리스 자동화가 그 스크립트로 같은 판정을 하므로 둘이 어긋나면 안 된다.
 
 **커밋 제목이 타입 접두어를 따르지 않으면 추론하지 않고 묻는다.** 추측한 값을 계산 결과처럼 제시하지 않는다.
 
