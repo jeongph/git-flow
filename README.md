@@ -3,9 +3,9 @@
 [![version](https://img.shields.io/github/v/release/jeongph/git-flow?label=version&color=blue)](https://github.com/jeongph/git-flow/releases)
 [![license](https://img.shields.io/github/license/jeongph/git-flow?color=lightgrey)](LICENSE)
 
-Git Flow 브랜치 모델을 Claude Code에서 **PR 기반으로 자동화**하는 플러그인.
+Git Flow에 따라 브랜치를 만들고 PR로 병합합니다. 잘못된 분기나 태그 생성도 확인합니다.
 
-설치하면 — 올바른 분기점에서 브랜치를 만들고, 커밋에서 다음 버전을 계산해 제안하며, 릴리스 완료 절차를 단계별로 진행하고, 모델을 깨는 명령을 차단합니다.
+브랜치 종류에 맞는 기준 브랜치에서 작업을 시작하고, 커밋을 분석해 다음 버전을 제안합니다. 릴리스 완료 절차를 단계별로 진행하며, 브랜치 규칙을 위반하는 명령을 차단합니다.
 
 [English](README.en.md)
 
@@ -17,9 +17,9 @@ Git Flow 브랜치 모델을 Claude Code에서 **PR 기반으로 자동화**하�
 
 이 플러그인은 **브랜치 모델·태그 규칙·back-merge 규칙을 원문 그대로 지키되, 반영 수단을 PR로 구현**합니다.
 
-### 무엇이 다른가
+### 방지하려는 실수
 
-Git Flow에서 실수는 브랜치를 만들 때가 아니라 **끝낼 때** 발생합니다. 완료 절차는 다단계·순서 의존적이고, 틀리면 복구가 어렵습니다.
+Git Flow의 완료 절차는 병합, 태그 생성, `develop`에 변경 반영 등 여러 단계로 이루어집니다. 순서를 빠뜨리거나 잘못 진행하면 다음과 같은 문제가 생길 수 있습니다.
 
 | 흔한 실수 | 결과 |
 |---|---|
@@ -48,7 +48,7 @@ Git Flow에서 실수는 브랜치를 만들 때가 아니라 **끝낼 때** 발
 | 명령 | `/git-flow:feature [name]` | `develop`에서 feature 브랜치 시작. 인자 없으면 작업 목록에서 선택 |
 | 명령 | `/git-flow:release [version]` | `develop`에서 release 브랜치 시작. 인자 없으면 다음 버전 추론 |
 | 명령 | `/git-flow:hotfix [name]` | **`main`**에서 hotfix 브랜치 시작 |
-| 명령 | `/git-flow:finish` | 현재 브랜치의 절차를 다음 단계로 진행 (멱등적) |
+| 명령 | `/git-flow:finish` | 현재 상태를 확인해 다음 단계로 진행. 완료한 단계는 건너뜀 |
 | 명령 | `/git-flow:status` | 현재 위치·미완료 back-merge 진단 |
 | 지식 | `git-flow` | 브랜치 모델 규율 — 분기점·태그·back-merge 판단 기준 (자동 로드) |
 | 훅 | `PreToolUse (Bash 트리거)` | 모델 위반 차단 |
@@ -110,7 +110,7 @@ BREAKING CHANGE 없음
 /git-flow:finish
 ```
 
-현재 브랜치의 타입과 상태를 읽어 **다음 한 걸음만** 딛습니다. 태그는 머지된 `main` 커밋에 붙어야 하는데 머지는 리뷰·CI를 거치므로, 한 번에 끝나지 않습니다.
+현재 브랜치의 종류와 상태를 확인해 다음 단계 하나를 진행합니다. 태그는 머지된 `main` 커밋에 붙어야 하는데 머지는 리뷰·CI를 거치므로, 한 번에 끝나지 않습니다.
 
 | 상태 | 동작 |
 |---|---|
@@ -119,7 +119,7 @@ BREAKING CHANGE 없음
 | PR 머지됨 | `git pull` 후 머지 커밋에 태그 제안 |
 | 태그 완료 | back-merge PR 생성 |
 
-멱등적이라 몇 번을 실행해도 안전하며, 끝난 단계는 건너뜁니다.
+같은 명령을 다시 실행하면 완료한 단계는 건너뛰고 현재 상태에 맞는 절차를 진행합니다.
 
 ### 진단
 
@@ -141,7 +141,7 @@ BREAKING CHANGE 없음
 
 ### 위반 차단
 
-훅은 명령을 쓰지 않고 직접 git을 실행할 때도 걸립니다.
+슬래시 명령을 거치지 않고 Bash 도구로 Git을 직접 실행해도 훅이 검사합니다.
 
 ```
 $ git tag -a v1.3.0        # release/v1.3.0 브랜치에서
@@ -170,11 +170,11 @@ GIT_FLOW_GUARD=off git commit -m "..."
 
 **한계** — 훅은 Bash 명령 문자열을 검사합니다. 실수를 막는 도구이지 권한 통제가 아닙니다. 강제가 필요하면 [브랜치 보호 규칙](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)을 함께 쓰십시오.
 
-## 언제 쓰지 않나
+## 적용 대상
 
 Git Flow는 **정기 릴리스가 있고 여러 버전이 동시에 존재하는** 제품에 맞는 모델입니다.
 
-지속 배포하는 웹 서비스나 항상 최신 버전만 쓰는 제품이라면 `develop`·`release` 층이 오버헤드입니다. 이 경우 트렁크 기반 개발이 더 적합하며, 이 플러그인은 도움이 되지 않습니다.
+지속 배포하는 웹 서비스나 항상 최신 버전만 쓰는 제품이라면 `develop`·`release` 층이 오버헤드입니다. 이런 프로젝트에서는 트렁크 기반 개발을 검토할 수 있습니다. 이 플러그인은 Git Flow 절차가 필요한 프로젝트를 대상으로 합니다.
 
 ## References
 

@@ -2,7 +2,7 @@
 
 A Claude Code plugin that automates the **Git Flow branching model over pull requests**.
 
-Once installed — branches start from the correct base, the next version is computed from your commits and proposed, release completion advances step by step, and commands that break the model are blocked.
+The plugin creates branches from the appropriate base, proposes the next version from your commits, and guides release completion one step at a time. Hooks check commands for branching rule violations.
 
 [한국어](README.md)
 
@@ -16,7 +16,7 @@ This plugin **keeps the branching model, tagging rules, and back-merge rules exa
 
 ### Why this exists
 
-In Git Flow, mistakes rarely happen when you *create* a branch. They happen when you *finish* one. Completion is multi-step, order-dependent, and hard to undo.
+Finishing a Git Flow branch involves merging, tagging, and merging changes back into `develop`. Skipping a step or using the wrong order can cause these problems:
 
 | Common mistake | Consequence |
 |---|---|
@@ -45,7 +45,7 @@ Run `/reload-plugins` or restart Claude Code to activate.
 | Command | `/git-flow:feature [name]` | Start a feature branch from `develop`. Picks from your task list when no argument is given |
 | Command | `/git-flow:release [version]` | Start a release branch from `develop`. Infers the next version when no argument is given |
 | Command | `/git-flow:hotfix [name]` | Start a hotfix branch from **`main`** |
-| Command | `/git-flow:finish` | Advance the current branch to its next step (idempotent) |
+| Command | `/git-flow:finish` | Check the current state and advance one step, skipping completed steps |
 | Command | `/git-flow:status` | Diagnose current position and missing back-merges |
 | Skill | `git-flow` | Branching model discipline — base, tagging, and back-merge judgment (auto-loaded) |
 | Hook | `PreToolUse (Bash matcher)` | Blocks violations of the model |
@@ -116,7 +116,7 @@ Reads the current branch type and state, then takes **exactly one step**. A tag 
 | PR merged | `git pull`, then propose tagging the merge commit |
 | Tag done | Open the back-merge PR |
 
-It is idempotent — safe to run repeatedly, and finished steps are skipped.
+Run it again to check the current state and continue. Completed steps are skipped.
 
 ### Diagnose
 
@@ -172,7 +172,7 @@ GIT_FLOW_GUARD=off git commit -m "..."
 
 Git Flow suits products with **scheduled releases and multiple versions live at once**.
 
-For a continuously deployed web service, or any product where only the latest version exists, the `develop` and `release` layers are pure overhead. Trunk-based development fits better, and this plugin will not help.
+For a continuously deployed web service, or any product where only the latest version exists, the `develop` and `release` layers are pure overhead. Consider trunk-based development for those projects. This plugin is intended for projects that need Git Flow.
 
 ## References
 
