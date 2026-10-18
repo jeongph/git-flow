@@ -7,7 +7,7 @@ argument-hint: "[이슈명 | 이슈번호]"
 
 # Hotfix
 
-**`main`**에서 `hotfix/<name>` 브랜치를 만든다. 운영에서 발견된 문제를 즉시 고치는 계획 외 릴리스다.
+**`main`에서** `hotfix/<name>` 브랜치를 만든다. 운영에서 발견된 문제를 즉시 고치는 계획 외 릴리스다.
 
 인자: `$ARGUMENTS`
 
@@ -103,7 +103,7 @@ hotfix/npe-on-login 브랜치를 만들었습니다.
   현재 운영  v1.2.0
   예상 태그  v1.2.1
 
-수정 후 /git-flow:finish 로 main 행 PR을 엽니다.
+수정 후 /git-flow:finish로 main 행 PR을 엽니다.
 ```
 
-태그가 없는 repo면 `현재 운영`·`예상 태그` 줄을 생략한다.
+태그가 없는 repo면 `현재 운영`과 `예상 태그` 줄을 생략한다.

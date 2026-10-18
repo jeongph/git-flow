@@ -66,17 +66,17 @@ git log <마지막태그>..develop --pretty=format:'%s%n%b%n---'
 
 | 감지 | 영향 |
 |---|---|
-| 제목에 `!`(예: `feat(api)!:`) 또는 본문·푸터에 `BREAKING CHANGE:` | 현재 major가 0이면 **MINOR**, 1 이상이면 **MAJOR** |
+| 제목에 `!`(예: `feat(api)!:`) 또는 본문이나 푸터에 `BREAKING CHANGE:` | 현재 major가 0이면 **MINOR**, 1 이상이면 **MAJOR** |
 | `feat` | MINOR |
-| `fix` · `perf` · `refactor` · `revert` · `build` | PATCH |
-| 그 외 (`docs`·`style`·`test`·`ci`·`chore`) | 없음 |
+| `fix`, `perf`, `refactor`, `revert`, `build` | PATCH |
+| 그 외 (`docs`, `style`, `test`, `ci`, `chore`) | 없음 |
 
-가장 높은 영향 하나가 다음 버전을 결정한다. **누적하지 않는다** — `feat`이 10건이어도 MINOR 한 번이다.
+가장 높은 영향 하나가 다음 버전을 결정한다. **누적하지 않는다.** `feat`이 10건이어도 MINOR 한 번이다.
 
 두 가지는 표준에서 조정한 것이다.
 
-- **`0.x`의 BREAKING을 MINOR로** — SemVer 4항에 따라 `0.y.z`는 초기 개발 구간이라 호환성을 보장하지 않는다. `0.4.0` → `0.5.0`처럼 올린다.
-- **`refactor`·`revert`·`build`를 PATCH로** — 코드가 실제로 바뀌는 타입을 빼면, 배포 파이프라인이 버전으로 갱신 여부를 판단할 때 그 변경이 사용자에게 도달하지 않는다.
+- **`0.x`의 BREAKING을 MINOR로**: SemVer 4항에 따라 `0.y.z`는 초기 개발 구간이라 호환성을 보장하지 않는다. `0.4.0` → `0.5.0`처럼 올린다.
+- **`refactor`, `revert`, `build`를 PATCH로**: 코드가 실제로 바뀌는 타입을 버전 판정에서 빼면, 배포 파이프라인은 버전을 보고 갱신 여부를 판단하므로 그 변경이 사용자에게 전달되지 않는다.
 
 이 표는 [claude-plugins의 `next-version.sh`](https://github.com/jeongph/claude-plugins/blob/main/.github/scripts/next-version.sh)와 같은 규칙이다. 릴리스 자동화가 그 스크립트로 같은 판정을 하므로 둘이 어긋나면 안 된다.
 
@@ -93,7 +93,7 @@ git log <마지막태그>..develop --pretty=format:'%s%n%b%n---'
 
 ---
 
-## 단계 3: 제안·확인
+## 단계 3: 제안과 확인
 
 계산 결과를 근거와 함께 보여주고 확인받는다.
 
@@ -108,7 +108,7 @@ develop에 그 이후 커밋 14건:
 
 BREAKING CHANGE 없음
 
-→ v1.3.0 을 제안합니다. 이걸로 진행할까요?
+→ v1.3.0을 제안합니다. 이걸로 진행할까요?
 ```
 
 MAJOR인 경우 근거가 된 커밋을 명시한다.
@@ -142,11 +142,11 @@ release/v1.3.0 브랜치를 만들었습니다.
   범위    v1.2.0..develop 커밋 14건
 
 이 브랜치에서 할 일:
-  - 버전 번호·메타데이터 확정
+  - 버전 번호와 메타데이터 확정
   - 막바지 버그 수정 (새 기능 추가 금지)
   - 검증 (test, build)
 
-완료 후 /git-flow:finish 로 main 행 PR을 엽니다.
+완료 후 /git-flow:finish로 main 행 PR을 엽니다.
 ```
 
 `release` 브랜치에는 **새 기능을 추가하지 않는다.** 이 브랜치가 열려 있는 동안 `develop`은 다음 릴리스 기능을 계속 받는다.

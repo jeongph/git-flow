@@ -1,5 +1,5 @@
 ---
-description: Git Flow 상태·미완료 절차 진단
+description: Git Flow 상태와 미완료 절차 진단
 disable-model-invocation: true
 allowed-tools: [Bash]
 ---
@@ -45,7 +45,7 @@ git merge-base --is-ancestor origin/develop <branch>   # develop 조상 여부
 
 | 타입 | 올바른 분기점 |
 |---|---|
-| `feature/*` · `release/*` | `develop` |
+| `feature/*`, `release/*` | `develop` |
 | `hotfix/*` | `main` |
 
 `hotfix`가 `develop`을 조상으로 가지면 **미출시 변경이 딸려 있을 수 있다.** 경고한다.
@@ -58,7 +58,7 @@ git merge-base --is-ancestor origin/develop <branch>   # develop 조상 여부
 git log origin/develop..origin/main --oneline
 ```
 
-결과가 있으면 어떤 릴리스·hotfix가 `develop`에 반영되지 않았는지 보고한다.
+결과가 있으면 어떤 릴리스나 hotfix가 `develop`에 반영되지 않았는지 보고한다.
 
 ### 2-4. 태그가 main에 있는가
 
@@ -91,7 +91,7 @@ git branch -a --format='%(refname:short) %(committerdate:relative)' | grep -E '(
 진단
   [경고] main에 있고 develop에 없는 커밋 2건
          a1b2c3d  Merge pull request #55 from hotfix/npe-on-login
-         → hotfix/npe-on-login 의 develop back-merge가 누락된 것으로 보입니다
+         → hotfix/npe-on-login의 develop back-merge가 누락된 것으로 보입니다
 
   [정상] 릴리스 태그 5건 모두 main에 있음
   [정상] 열린 release 브랜치 1개

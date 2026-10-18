@@ -1,15 +1,15 @@
 ---
 name: git-flow
-description: 'Use when working with Git Flow branches — deciding where to branch from, what merges where, when and where a release tag goes, or why a step was blocked. 사용자가 "브랜치 어디서 따지", "이거 hotfix야 feature야", "릴리스 어떻게 해", "태그 언제 붙여", "develop에 다시 머지해야 하나"라고 하거나, AI가 브랜치를 만들거나 릴리스·hotfix를 다룰 때 스스로 사용. 핵심 규율: main은 운영 상태의 단일 진실이며, 릴리스 태그는 머지된 main 커밋에만 붙는다.'
+description: 'Use when working with Git Flow branches — deciding where to branch from, what merges where, when and where a release tag goes, or why a step was blocked. 사용자가 "브랜치 어디서 따지", "이거 hotfix야 feature야", "릴리스 어떻게 해", "태그 언제 붙여", "develop에 다시 머지해야 하나"라고 하거나, AI가 브랜치를 만들거나 릴리스나 hotfix를 다룰 때 스스로 사용. 핵심 원칙: main은 운영 상태를 나타내는 유일한 기준이며, 릴리스 태그는 머지된 main 커밋에만 붙는다.'
 ---
 
 # Git Flow
 
-Git Flow 브랜치 모델의 규율과 판단 기준이다. 어디서 분기하고, 무엇이 어디로 머지되며, 태그를 언제 어디에 붙이는지를 다룬다.
+Git Flow 브랜치 모델의 규칙과 판단 기준이다. 어디서 분기하고, 무엇이 어디로 머지되며, 태그를 언제 어디에 붙이는지를 다룬다.
 
-비유: 브랜치 이름은 *지금 무엇을 하는가*를 말한다. Git Flow는 거기에 *어디서 왔고 어디로 가는가*를 더한다 — 그 경로가 곧 릴리스 이력이 된다.
+비유: 브랜치 이름은 *지금 무엇을 하는가*를 말한다. Git Flow는 거기에 *어디서 왔고 어디로 가는가*를 더하고, 그 경로가 곧 릴리스 이력이 된다.
 
-**원칙: `main`의 HEAD는 항상 운영에 배포 가능한 상태를 반영한다.** 아래 규칙 대부분이 이 한 전제에서 파생된다.
+**원칙: `main`의 HEAD는 항상 운영에 배포 가능한 상태를 반영한다.** 아래 규칙은 대부분 이 전제 하나에서 나온다.
 
 ---
 
@@ -23,7 +23,7 @@ Git Flow 브랜치 모델의 규율과 판단 기준이다. 어디서 분기하�
 | `release/*` | 릴리스 준비 | `develop` | `main` **+** `develop` |
 | `hotfix/*` | 운영 긴급 수정 | **`main`** | `main` **+** `develop` |
 
-`main`·`develop`에 직접 커밋하지 않는다. 모든 변경은 `feature`·`release`·`hotfix`를 거친다.
+`main`과 `develop`에 직접 커밋하지 않는다. 모든 변경은 `feature`, `release`, `hotfix` 중 하나를 거친다.
 
 ## 2. 분기점이 결정적인 이유
 
@@ -50,10 +50,10 @@ git tag -a v1.2.0
 git merge --no-ff release/v1.2.0
 ```
 
-> 원문 규정: release·hotfix 브랜치를 `main`에 **먼저** 머지하고, **그다음** 그 머지 커밋에 태그를 붙인다.
+> 원문 규정: release나 hotfix 브랜치를 `main`에 **먼저** 머지하고, **그다음** 그 머지 커밋에 태그를 붙인다.
 > — [A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/)
 
-**머지가 먼저, 태그가 나중이다.** 태그는 머지로 생긴 커밋을 가리킨다. 둘은 별개의 동작이며, 태그가 머지의 부산물로 자동 생성되지 않는다.
+**머지가 먼저, 태그가 나중이다.** 태그는 머지로 생긴 커밋을 가리킨다. 둘은 별개의 동작이고, 머지한다고 태그가 자동으로 생기지 않는다.
 
 PR로 머지하는 경우 함정이 하나 있다. **머지 커밋은 원격에만 생긴다.** 로컬에서 `git pull` 없이 태그를 붙이면 이전 커밋에 붙는다.
 
@@ -70,11 +70,11 @@ git push origin v1.2.0
 
 ## 4. back-merge를 빠뜨리면
 
-`release`·`hotfix`는 **두 곳**으로 간다. `main`에만 머지하고 끝내면 그 변경이 `develop`에 없다.
+`release`와 `hotfix`는 **두 곳**으로 간다. `main`에만 머지하고 끝내면 그 변경이 `develop`에 없다.
 
 | 빠뜨린 것 | 결과 |
 |---|---|
-| release → develop | 버전 번호 확정·막바지 수정이 유실. 다음 릴리스에서 되살아나거나 충돌 |
+| release → develop | 버전 번호 확정과 막바지 수정이 유실. 다음 릴리스에서 되살아나거나 충돌 |
 | hotfix → develop | 고친 버그가 다음 릴리스에서 부활 |
 
 **hotfix 시점에 `release` 브랜치가 열려 있으면 back-merge 대상은 `develop`이 아니라 그 `release` 브랜치다.** 곧 나갈 릴리스가 수정을 품고 나가야 하며, `release`가 나중에 `develop`으로 back-merge되므로 결국 양쪽에 반영된다.
@@ -108,24 +108,24 @@ git push origin v1.2.0
 
 ### release 브랜치가 필요한가
 
-`release` 브랜치의 존재 이유는 *버전 확정·막바지 수정을 하는 동안 `develop`이 다음 기능을 계속 받게 하는 것*이다.
+`release` 브랜치의 존재 이유는 *버전 확정과 막바지 수정을 하는 동안 `develop`이 다음 기능을 계속 받게 하는 것*이다.
 
 확정할 버전 파일이 없고 막바지 수정도 없다면 `release` 브랜치는 빈 껍데기다. 생략하고 `develop` → `main` PR로 대신할 수 있다. **이때도 태그는 머지된 `main` 커밋에 붙는다.**
 
 ## 7. 강제의 한계
 
-브랜치 규칙을 도구로 100% 막을 수는 없다. 로컬 git 명령은 언제든 우회 가능하다.
+브랜치 규칙을 도구로 100% 막을 수는 없다. 로컬 git 명령으로 언제든 우회할 수 있다.
 
-진짜 강제가 필요하면 호스팅의 브랜치 보호 규칙(GitHub ruleset 등)을 쓴다. 다만 **태그 대상 커밋이 어느 브랜치에 속하는지는 ruleset으로 강제할 수 없으므로**, 그 검증은 릴리스 파이프라인에서 한다.
+진짜 강제가 필요하면 호스팅 서비스의 브랜치 보호 규칙(GitHub ruleset 등)을 쓴다. 다만 **태그 대상 커밋이 어느 브랜치에 속하는지는 ruleset으로 강제할 수 없으므로**, 그 검증은 릴리스 파이프라인에서 한다.
 
 ## 8. 언제 스킵하나
 
 Git Flow는 **정기 릴리스가 있고 여러 버전이 동시에 존재하는** 제품에 맞는 모델이다.
 
-지속 배포(continuous deployment)하는 웹 서비스, 버전이 하나뿐이고 항상 최신만 쓰는 제품이라면 `develop`·`release` 층이 순수 오버헤드다. 이 경우 트렁크 기반 개발이 더 낫다 — 이 스킬의 규율을 억지로 적용하지 않는다.
+지속 배포(continuous deployment)하는 웹 서비스, 버전이 하나뿐이고 항상 최신만 쓰는 제품이라면 `develop`과 `release` 층은 오버헤드일 뿐이다. 이런 경우에는 트렁크 기반 개발이 더 나으며, 이 스킬의 규칙을 억지로 적용하지 않는다.
 
 ## References
 
-- [A successful Git branching model — Vincent Driessen](https://nvie.com/posts/a-successful-git-branching-model/) — 브랜치 모델 원문. 분기·머지 대상, 머지 → 태그 순서, hotfix의 release 우선 back-merge 규정
-- [Conventional Commits 1.0.0](https://www.conventionalcommits.org/) — 커밋 타입과 SemVer 영향
-- [GitHub Docs — Available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets) — 브랜치·태그 보호 규칙의 범위와 한계
+- [A successful Git branching model — Vincent Driessen](https://nvie.com/posts/a-successful-git-branching-model/): 브랜치 모델 원문. 분기와 머지 대상, 머지한 뒤 태그를 붙이는 순서, hotfix를 release에 먼저 back-merge하는 규정
+- [Conventional Commits 1.0.0](https://www.conventionalcommits.org/): 커밋 타입과 SemVer 영향
+- [GitHub Docs — Available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets): 브랜치와 태그 보호 규칙의 범위와 한계
