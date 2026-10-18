@@ -46,17 +46,17 @@ git branch -a --format='%(refname:short)'  # develop 존재 확인
    ```bash
    gh issue list --state open --limit 20
    ```
-3. repo에 작업 파일이 있으면 그것을 쓴다 (`docs/tasks.md`·`TODO.md`·`docs/todo/` 등).
+3. repo에 작업 파일이 있으면 그것을 쓴다 (`docs/tasks.md`, `TODO.md`, `docs/todo/` 등).
 4. 아무것도 없으면 사용자에게 직접 묻는다.
 
 ```
 어떤 작업을 시작할까요?
 ```
 
-3번으로 감지한 경우 **단정하지 않는다.** 파일이 존재한다고 그것이 작업 목록이라는 보장이 없다.
+3번으로 감지한 경우 **단정하지 않는다.** 파일이 있다고 해서 그것이 작업 목록이라는 보장은 없다.
 
 ```
-docs/tasks.md 를 작업 목록으로 봤습니다. 맞나요?
+docs/tasks.md를 작업 목록으로 봤습니다. 맞나요?
 ```
 
 목록을 제시하고 사용자가 고르게 한다. 임의로 하나를 선택하지 않는다.
@@ -94,7 +94,7 @@ git checkout -b feature/<name>
 
 `develop`을 반드시 최신화한 뒤 분기한다. 최신화하지 않으면 오래된 기준점에서 갈라져 나중에 불필요한 충돌이 난다.
 
-`git pull`이 실패하면(원격 없음·네트워크 오류) 중단하고 원인을 보고한다. 로컬 `develop`으로 조용히 진행하지 않는다.
+`git pull`이 실패하면(원격 없음, 네트워크 오류) 중단하고 원인을 보고한다. 로컬 `develop`으로 조용히 진행하지 않는다.
 
 ---
 
@@ -106,7 +106,7 @@ feature/42-oauth-login 브랜치를 만들었습니다.
   분기점  develop (<SHA 7자리>)
   이슈    #42 OAuth 로그인 지원
 
-작업 후 /git-flow:finish 로 develop 행 PR을 엽니다.
+작업 후 /git-flow:finish로 develop 행 PR을 엽니다.
 ```
 
 이슈 없이 시작했으면 이슈 줄을 생략한다.

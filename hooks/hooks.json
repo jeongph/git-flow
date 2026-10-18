@@ -1,5 +1,5 @@
 {
-  "description": "Git Flow 위반 차단 — main·develop 직접 커밋, squash 머지, develop발 hotfix 분기, 비-main 릴리스 태그",
+  "description": "Git Flow 위반 차단: main과 develop에 직접 커밋, squash 머지, develop에서 hotfix 분기, main이 아닌 커밋에 릴리스 태그",
   "hooks": {
     "PreToolUse": [
       {

@@ -8,7 +8,7 @@ allowed-tools: [Bash]
 
 현재 브랜치의 타입과 진행 상태를 읽어 **다음 한 걸음만** 딛는다.
 
-release·hotfix의 완료는 한 번에 끝나지 않는다. 태그는 머지된 `main` 커밋에 붙어야 하는데, 머지는 리뷰·CI를 거치므로 그 사이에 시간이 흐른다. 그래서 이 스킬은 **멱등적**이다 — 몇 번을 호출해도 안전하며, 이미 끝난 단계는 건너뛴다.
+release와 hotfix는 한 번에 완료되지 않는다. 태그는 머지된 `main` 커밋에 붙어야 하는데, 머지는 리뷰와 CI를 거치므로 그 사이에 시간이 흐른다. 그래서 이 스킬은 **멱등적**이다. 몇 번을 호출해도 안전하고, 이미 끝난 단계는 건너뛴다.
 
 ## 실행 흐름
 
@@ -30,10 +30,10 @@ git branch --show-current
 | `main` · `develop` | **중단** |
 | 그 외 | **중단** |
 
-`main`·`develop`에 서 있거나 Git Flow 브랜치가 아니면 중단하고 알린다. 임의로 브랜치를 만들지 않는다.
+`main`이나 `develop` 브랜치에 있거나 Git Flow 브랜치가 아니면 중단하고 알린다. 임의로 브랜치를 만들지 않는다.
 
 ```
-현재 main 브랜치입니다. finish는 feature·release·hotfix 브랜치에서 실행합니다.
+현재 main 브랜치입니다. finish는 feature, release, hotfix 브랜치에서 실행합니다.
 ```
 
 ---
@@ -69,7 +69,7 @@ gh pr list --head <branch> --state all --json number,state,baseRefName,mergedAt,
 | 감지한 상태 | 다음 한 걸음 |
 |---|---|
 | main 행 PR 없음 | PR 생성 (base=`main`) → **멈춘다** |
-| PR 열려 있음 | 상태만 보고 (CI·리뷰 대기). 머지하지 않는다 |
+| PR 열려 있음 | 상태만 보고 (CI와 리뷰 대기). 머지하지 않는다 |
 | PR 머지됨 + 태그 없음 | `git pull` → 머지 커밋 확인 → 태그 생성·push **제안** |
 | 태그 있음 + back-merge PR 없음 | back-merge PR 생성 |
 | back-merge 머지됨 | 완료 보고 |
@@ -96,7 +96,7 @@ base는 타입이 정한다. **임의로 바꾸지 않는다.**
 Closes #42
 ```
 
-PR을 만들고 **멈춘다.** 리뷰·CI는 사람의 몫이다. 이어서 머지하지 않는다.
+PR을 만들고 **멈춘다.** 리뷰와 CI는 사람의 몫이다. 이어서 머지하지 않는다.
 
 ---
 
@@ -110,13 +110,13 @@ gh pr view <번호> --json reviewDecision,mergeable
 ```
 
 ```
-PR #58 이 열려 있습니다 (release/v1.3.0 → main)
+PR #58이 열려 있습니다 (release/v1.3.0 → main)
 
   CI      통과
   리뷰    대기 중
   머지    가능
 
-머지되면 /git-flow:finish 를 다시 실행해 태그를 붙입니다.
+머지되면 /git-flow:finish를 다시 실행해 태그를 붙입니다.
 ```
 
 **머지하지 않는다.** 사용자가 명시적으로 머지를 지시하면 그때 수행하며, 이때도 `--squash`는 쓰지 않는다.
@@ -125,7 +125,7 @@ PR #58 이 열려 있습니다 (release/v1.3.0 → main)
 gh pr merge <번호> --merge --delete-branch
 ```
 
-`--squash`는 브랜치 단위 작업 묶음을 없애 릴리스·hotfix의 경계를 추적할 수 없게 만든다.
+`--squash`는 브랜치 단위 작업 묶음을 없애 릴리스와 hotfix의 경계를 추적할 수 없게 만든다.
 
 ---
 
@@ -149,7 +149,7 @@ git tag --points-at HEAD             # 이미 태그가 있는지
 HEAD가 `main`이고 머지 커밋이 맞는지 확인한 뒤 **제안**한다.
 
 ```
-PR #58 이 머지되었습니다.
+PR #58이 머지되었습니다.
 
   main HEAD   a1b2c3d  Merge pull request #58 from release/v1.3.0
   붙일 태그   v1.3.0
@@ -170,11 +170,11 @@ git push origin v1.3.0
 
 ### 3-D. 태그 있음 + back-merge PR 없음 (release · hotfix)
 
-`release`·`hotfix`는 **두 곳**으로 간다. `main`에만 머지하고 끝내면 그 변경이 `develop`에 없다.
+`release`와 `hotfix`는 **두 곳**으로 간다. `main`에만 머지하고 끝내면 그 변경이 `develop`에 없다.
 
 | 빠뜨린 것 | 결과 |
 |---|---|
-| release → develop | 버전 확정·막바지 수정 유실 |
+| release → develop | 버전 확정과 막바지 수정 유실 |
 | hotfix → develop | 고친 버그가 다음 릴리스에서 부활 |
 
 back-merge 대상을 정한다.
@@ -208,11 +208,11 @@ git push -u origin <branch>
 무엇을 했고 다음이 무엇인지 항상 함께 보고한다.
 
 ```
-release/v1.3.0 → main PR #58 을 열었습니다.
+release/v1.3.0 → main PR #58을 열었습니다.
 
   https://github.com/<owner>/<repo>/pull/58
 
-다음: 리뷰·CI 통과 후 머지 → /git-flow:finish 재실행 (태그)
+다음: 리뷰와 CI 통과 후 머지 → /git-flow:finish 재실행 (태그)
 ```
 
 완료 시:
